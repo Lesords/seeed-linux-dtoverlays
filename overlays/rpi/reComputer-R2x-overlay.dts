@@ -138,6 +138,48 @@
                     output-high;
                     line-name = "USER_LED_R";
                 };
+
+                LoRaWAN_SX1302_RST {
+                    gpios = <&pca9535 9 0>;
+                    output-low;
+                    line-name = "LoRaWAN_SX1302_RST";
+                };
+
+                LoRaWAN_SX1262_RST {
+                    gpios = <&pca9535 10 0>;
+                    output-low;
+                    line-name = "LoRaWAN_SX1262_RST";
+                };
+
+                LoRaWAN_SX1262_CS {
+                    gpios = <&pca9535 11 0>;
+                    output-low;
+                    line-name = "LoRaWAN_SX1262_CS";
+                };
+
+                DO_4 {
+                    gpios = <&pca9535 12 0>;
+                    output-low;
+                    line-name = "DO_4";
+                };
+
+                DO_3 {
+                    gpios = <&pca9535 13 0>;
+                    output-low;
+                    line-name = "DO_3";
+                };
+
+                DO_2 {
+                    gpios = <&pca9535 14 0>;
+                    output-low;
+                    line-name = "DO_2";
+                };
+
+                DO_1 {
+                    gpios = <&pca9535 15 0>;
+                    output-low;
+                    line-name = "DO_1";
+                };
             };
         };
     };
