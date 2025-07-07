@@ -355,4 +355,19 @@
             };
         };
     };
+
+    fragment@11 {
+        target-path = "/";
+        __overlay__ {
+            CH342_RST: CH342_RST{
+                compatible = "regulator-fixed";
+                regulator-name = "CH342_RST";
+                gpio = <&pca9535 2 0>;
+                enable-active-high;
+                regulator-boot-on;
+                regulator-always-on;
+                status = "okay";
+            };
+        };
+    };
 };
