@@ -207,8 +207,9 @@
                     "M2B_DPR_3V3",
                     "M2B_W_DISABLE2",
                     "SIM_MUX_SEL",
-                    "",
-                    "M2B_PCIe_Reset_3V3"
+                    "485_1_120R_EN",
+                    "M2B_PCIe_Reset_3V3",
+                    "485_2_120R_EN"
                 ;
 
                 M2B_POWER_OFF {
@@ -241,10 +242,22 @@
                     line-name = "SIM_MUX_SEL";
                 };
 
+                485_1_120R_EN {
+                    gpios = <&pca9554 5 0>;
+                    output-low;
+                    line-name = "485_1_120R_EN";
+                };
+
                 M2B_PCIe_Reset_3V3 {
                     gpios = <&pca9554 6 0>;
                     output-low;
                     line-name = "M2B_PCIe_Reset_3V3";
+                };
+
+                485_2_120R_EN {
+                    gpios = <&pca9554 7 0>;
+                    output-low;
+                    line-name = "485_2_120R_EN";
                 };
             };
         };
