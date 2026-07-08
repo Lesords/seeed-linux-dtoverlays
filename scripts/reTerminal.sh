@@ -58,15 +58,18 @@ function get_kernel_version() {
       ZIMAGE=/boot/firmware/kernel7l.img
       if [[ $arch_r == "arm64" || $uname_r == *rpi-v8* ]]; then
         ZIMAGE=/boot/firmware/kernel8.img
-        # if is pi5 or cm5, we use kernel_2712.img, if rpi-2712 in uname_r
-        if [[ $uname_r == *2712* ]]; then
+        # Pi5/CM5 boots kernel_2712.img; prefer it when present. uname -r is the
+        # build-host kernel during a pi-gen cross-build, so it can't detect 2712.
+        if [ -f /boot/firmware/kernel_2712.img ]; then
           ZIMAGE=/boot/firmware/kernel_2712.img
         fi
       fi
     fi
   fi
 
-  [ -f /boot/firmware/vmlinuz ] && ZIMAGE=/boot/firmware/vmlinuz
+  # only fall back to vmlinuz when the chosen kernel image is absent, so an
+  # existing vmlinuz (e.g. the v8 kernel) doesn't override a 2712 selection
+  [ -f "$ZIMAGE" ] || { [ -f /boot/firmware/vmlinuz ] && ZIMAGE=/boot/firmware/vmlinuz; }
   IMG_OFFSET=$(LC_ALL=C grep -abo $'\x1f\x8b\x08\x00' $ZIMAGE | head -n 1 | cut -d ':' -f 1)
   _VER_RUN=$(dd if=$ZIMAGE obs=64K ibs=4 skip=$(( IMG_OFFSET / 4)) 2>/dev/null | zcat | grep -a -m1 "Linux version" | strings | awk '{ print $3; }' | grep "[0-9]")
 
