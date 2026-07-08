@@ -614,7 +614,7 @@ function install {
     install_modules rtc-pcf8563w
     install_overlay_reComputer
   elif [[ $device == rpi-cm* ]]; then
-    install_modules bmi088 rtc-pcf8563w
+    install_modules rtc-pcf8563w
     install_overlay_reComputer
   fi
 
