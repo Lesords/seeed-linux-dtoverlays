@@ -300,6 +300,13 @@ function install_overlay_reComputer {
   # config.txt
   set_config_value "enable_uart" "1"
 
+  if [ "$device" = "rpi-cm5-inway" ]; then
+    set_config_dtparam "pwr_led_trigger" "default-on"
+    set_config_dtparam "pwr_led_active_low" "1"
+    set_config_dtparam "act_led_trigger" "mmc0"
+    set_config_dtparam "act_led_active_low" "1"
+  fi
+
   set_config_dtoverlay "dwc2,dr_mode=host"
   set_config_dtoverlay "vc4-kms-v3d"
   set_config_dtoverlay "imx708,cam0"
@@ -320,6 +327,13 @@ function uninstall_overlay_reComputer {
   remove_cmdline_value "console=ttyAMA0,115200"
   # config.txt
   remove_config_value "enable_uart" "1"
+
+  if [ "$device" = "rpi-cm5-inway" ]; then
+    remove_config_dtparam "pwr_led_trigger" "default-on"
+    remove_config_dtparam "pwr_led_active_low" "1"
+    remove_config_dtparam "act_led_trigger" "mmc0"
+    remove_config_dtparam "act_led_active_low" "1"
+  fi
 
   remove_config_dtoverlay "dwc2,dr_mode=host"
   remove_config_dtoverlay "vc4-kms-v3d"
