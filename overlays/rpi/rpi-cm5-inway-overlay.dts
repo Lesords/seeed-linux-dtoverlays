@@ -33,7 +33,6 @@
 				#sound-dai-cells = <0>;
 				compatible = "ti,tlv320aic3104";
 				reg = <0x18>;
-				ai3x-micbias-vg = <2>;// set MICBIAS to 2.5v
 			};
 			
 			pcf857x: pcf@21 {
