@@ -20,6 +20,7 @@
 #include <linux/iio/triggered_buffer.h>
 #include <linux/regmap.h>
 #include <linux/regulator/consumer.h>
+#include <linux/version.h>
 #include "bmi088_gyro.h"
 
 #define BMG160_IRQ_NAME		"bmg160_event"
@@ -749,7 +750,11 @@ static int bmg160_write_event_config(struct iio_dev *indio_dev,
 				     const struct iio_chan_spec *chan,
 				     enum iio_event_type type,
 				     enum iio_event_direction dir,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 18, 0)
+				     bool state)
+#else
 				     int state)
+#endif
 {
 	struct bmg160_data *data = iio_priv(indio_dev);
 	int ret;

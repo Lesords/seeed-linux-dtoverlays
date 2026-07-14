@@ -19,8 +19,35 @@
 #include <linux/regmap.h>
 #include <linux/slab.h>
 #include <linux/unaligned.h>
+#include <linux/version.h>
 
 #include "bmi088_accel.h"
+
+static int bmi088_accel_claim_direct(struct iio_dev *indio_dev)
+{
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 18, 0)
+	return iio_device_claim_direct(indio_dev) ? 0 : -EBUSY;
+#else
+	return iio_device_claim_direct_mode(indio_dev);
+#endif
+}
+
+static void bmi088_accel_release_direct(struct iio_dev *indio_dev)
+{
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 18, 0)
+	iio_device_release_direct(indio_dev);
+#else
+	iio_device_release_direct_mode(indio_dev);
+#endif
+}
+
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 18, 0)
+#define BMI088_ACCEL_EXPORT_SYMBOL(symbol) \
+	EXPORT_SYMBOL_NS_GPL(symbol, "IIO_BMI088")
+#else
+#define BMI088_ACCEL_EXPORT_SYMBOL(symbol) \
+	EXPORT_SYMBOL_NS_GPL(symbol, IIO_BMI088)
+#endif
 
 #define BMI088_ACCEL_REG_CHIP_ID			0x00
 #define BMI088_ACCEL_REG_ERROR				0x02
@@ -147,7 +174,7 @@ const struct regmap_config bmi088_regmap_conf = {
 	.volatile_table = &bmi088_volatile_table,
 	.cache_type = REGCACHE_RBTREE,
 };
-EXPORT_SYMBOL_NS_GPL(bmi088_regmap_conf, IIO_BMI088);
+BMI088_ACCEL_EXPORT_SYMBOL(bmi088_regmap_conf);
 
 static int bmi088_accel_power_up(struct bmi088_accel_data *data)
 {
@@ -313,12 +340,12 @@ static int bmi088_accel_read_raw(struct iio_dev *indio_dev,
 			if (ret)
 				return ret;
 
-			ret = iio_device_claim_direct_mode(indio_dev);
+			ret = bmi088_accel_claim_direct(indio_dev);
 			if (ret)
 				goto out_read_raw_pm_put;
 
 			ret = bmi088_accel_get_axis(data, chan, val);
-			iio_device_release_direct_mode(indio_dev);
+			bmi088_accel_release_direct(indio_dev);
 			if (!ret)
 				ret = IIO_VAL_INT;
 
@@ -587,7 +614,7 @@ int bmi088_accel_core_probe(struct device *dev, struct regmap *regmap,
 
 	return ret;
 }
-EXPORT_SYMBOL_NS_GPL(bmi088_accel_core_probe, IIO_BMI088);
+BMI088_ACCEL_EXPORT_SYMBOL(bmi088_accel_core_probe);
 
 
 void bmi088_accel_core_remove(struct device *dev)
@@ -601,7 +628,7 @@ void bmi088_accel_core_remove(struct device *dev)
 	pm_runtime_set_suspended(dev);
 	bmi088_accel_power_down(data);
 }
-EXPORT_SYMBOL_NS_GPL(bmi088_accel_core_remove, IIO_BMI088);
+BMI088_ACCEL_EXPORT_SYMBOL(bmi088_accel_core_remove);
 
 static int bmi088_accel_runtime_suspend(struct device *dev)
 {

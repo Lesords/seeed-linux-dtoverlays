@@ -13,6 +13,7 @@
 #include <linux/module.h>
 #include <linux/regmap.h>
 #include <linux/slab.h>
+#include <linux/version.h>
 
 #include "bmi088_accel.h"
 
@@ -67,4 +68,8 @@ module_i2c_driver(bmi088_accel_driver);
 MODULE_AUTHOR("Jun Yan <jerrysteve1101@gmail.com>");
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("BMI088 accelerometer driver (I2C)");
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 18, 0)
+MODULE_IMPORT_NS("IIO_BMI088");
+#else
 MODULE_IMPORT_NS(IIO_BMI088);
+#endif
